@@ -5,9 +5,13 @@ import com.moviereview.movieproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -41,17 +45,21 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse loginUser(LoginDetails loginUser) {
-        manager.authenticate(new UsernamePasswordAuthenticationToken(
+       Authentication authentication = manager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginUser.getEmail(),loginUser.getPassword()
         ));
+       Collection<? extends GrantedAuthority> authorities= authentication.getAuthorities();
+
       var user = repository.findByEmail(loginUser.getEmail())
               .orElseThrow(()-> new UsernameNotFoundException("User not found"));
 
-        var jwtToker = userService.generateToken(user);
+        var jwtToken = userService.generateToken(user,authorities);
 
         return  AuthenticationResponse
                 .builder()
-                .token(jwtToker)
+                .token(jwtToken)
                 .build();
     }
+
+
 }

@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                                 .permitAll()
                                 .requestMatchers(
                                         new AntPathRequestMatcher("/review/user/**")
-                                ).hasAnyAuthority("USER")
+                                ).hasAnyAuthority("USER","ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->

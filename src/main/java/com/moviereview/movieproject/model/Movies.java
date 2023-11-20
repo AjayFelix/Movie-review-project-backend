@@ -27,6 +27,8 @@ public class Movies {
     private List<Review> reviewIds;
     private String description;
     private String director;
+    private List<String> writers;
+    private List<String> actors;
     private String duration;
 
 }

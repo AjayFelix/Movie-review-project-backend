@@ -5,9 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import java.security.Key;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,25 @@ public class UserService {
     private static final String SECRET_KEY ="3b7b6bb2ca15bde6ed35f056c713ac1f6b52e0da642302fef077555dfe39b5fc";
 
 //------------------------------------------Token Generation------------------------------------------------------------
+    public String generateToken(UserDetails userDetails, Collection<? extends GrantedAuthority> authorities){
+        return generateToken(new HashMap<>(),userDetails,authorities);
+    }
+
+
+
+    public String generateToken(
+            Map<String , Object> extraClams,
+            UserDetails userDetails,Collection<? extends GrantedAuthority> authorities){
+        return  Jwts.builder()
+                .setClaims(extraClams)
+                .setSubject(userDetails.getUsername()).claim("role", authorities)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() +1000 *60 * 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+
+    }
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(),userDetails);
     }

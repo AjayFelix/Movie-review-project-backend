@@ -81,6 +81,23 @@ public class MovieController {
         }
 
     }
+    @PostMapping("/public/createMovie")
+    public ResponseEntity<?> createMovie(@RequestBody Movies newMovie) {
+
+        try {
+            movieSvc.saveOrUpdateMovie(newMovie);
+            return  new ResponseEntity<String>("given movie updated", HttpStatus.OK);
+        } catch (Exception e) {
+
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.OK);
+
+        }
+
+
+
+    }
+
+
 
 
 

@@ -3,6 +3,7 @@ package com.moviereview.movieproject.controller;
 import com.moviereview.movieproject.model.AuthenticationResponse;
 import com.moviereview.movieproject.model.LoginDetails;
 import com.moviereview.movieproject.model.NewUserDetails;
+import com.moviereview.movieproject.repository.UserRepository;
 import com.moviereview.movieproject.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -20,15 +21,19 @@ public class AuthenticationController {
 
     private  final AuthenticationService service;
 
+    private final UserRepository repository;
+
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody NewUserDetails newUser){
+    public ResponseEntity<?> registerUser(@RequestBody NewUserDetails newUser){
 
+        if (repository.findByEmail(newUser.getEmail()).isEmpty()){
+            return  ResponseEntity.ok(service.registerUser(newUser));
 
-        return  ResponseEntity.ok(service.registerUser(newUser));
+        }else  return  new ResponseEntity<String>("Email Id already registered", HttpStatus.IM_USED);
 
 
     }
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginDetails loginUser){
 
         return  ResponseEntity.ok(service.loginUser(loginUser));
