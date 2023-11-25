@@ -31,13 +31,15 @@ public class SecurityConfiguration {
                         authorizeRequests
                                 .requestMatchers(
                                         new AntPathRequestMatcher("/api/rrcritics/movie/public/**"),
-                                        new AntPathRequestMatcher("/auth/**")
-
+                                        new AntPathRequestMatcher("/auth/public/**")
                                 )
                                 .permitAll()
                                 .requestMatchers(
                                         new AntPathRequestMatcher("/review/user/**")
                                 ).hasAnyAuthority("USER","ADMIN")
+                                .requestMatchers(
+                                        new AntPathRequestMatcher("/api/rrcritics/movie/admin/**")
+                                ).hasAnyAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
@@ -51,3 +53,17 @@ public class SecurityConfiguration {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

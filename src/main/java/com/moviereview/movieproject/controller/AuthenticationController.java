@@ -23,7 +23,7 @@ public class AuthenticationController {
 
     private final UserRepository repository;
 
-    @PostMapping("/register")
+    @PostMapping("/public/register")
     public ResponseEntity<?> registerUser(@RequestBody NewUserDetails newUser){
 
         if (repository.findByEmail(newUser.getEmail()).isEmpty()){
@@ -33,14 +33,14 @@ public class AuthenticationController {
 
 
     }
-    @PostMapping("/login")
+    @PostMapping("/public/login")
     public ResponseEntity<AuthenticationResponse> loginUser(@RequestBody LoginDetails loginUser){
 
         return  ResponseEntity.ok(service.loginUser(loginUser));
 
 
     }
-    @GetMapping("/logout")
+    @GetMapping("/public/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         System.out.println("inside logout....");
         HttpSession session = request.getSession();
